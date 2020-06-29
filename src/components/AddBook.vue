@@ -49,7 +49,8 @@ export default {
       this.$store.commit(
         'addBook', 
         { title: this.title, author: this.author, pages: this.pages, readStatus: this.readStatus}
-        );
+      );
+      this.$store.commit('storeLibrary');
       this.title = '';
       this.author = ''; 
       this.pages = '';

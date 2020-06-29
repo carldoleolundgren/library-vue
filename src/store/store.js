@@ -19,7 +19,16 @@ export const store = new Vuex.Store({
   mutations: {
     addBook(state, payload) {
       state.library.push(payload)
+    },
+    storeLibrary() {
+      let librarySerialized = JSON.stringify(this.state.library);
+      localStorage.setItem('storedLibrary', librarySerialized);
+      console.log(librarySerialized)
+    },
+    loadLibrary() {
+      if (JSON.parse(localStorage.getItem('storedLibrary'))) {
+        this.state.library = JSON.parse(localStorage.getItem('storedLibrary'));
+      }
     }
   }
-
 });

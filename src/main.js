@@ -7,5 +7,6 @@ export const eventBus = new Vue();
 new Vue({
   el: '#app',
   store,
+  beforeCreate() { this.$store.commit('loadLibrary');},
   render: h => h(App)
 })
