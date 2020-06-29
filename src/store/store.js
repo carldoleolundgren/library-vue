@@ -10,7 +10,7 @@ export const store = new Vuex.Store({
       author: 'Cixin Liu',
       pages: 303,
       readStatus: 'Yes'},
-      {title: 'Butt\'s End',
+      {title: 'Death\'s End',
       author: 'Cixin Liu',
       pages: 433,
       readStatus: 'Yes'},
