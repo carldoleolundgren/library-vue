@@ -29,6 +29,7 @@ export const store = new Vuex.Store({
       if (JSON.parse(localStorage.getItem('storedLibrary'))) {
         this.state.library = JSON.parse(localStorage.getItem('storedLibrary'));
       }
+      //this.state.library = [];
     }
   }
 });

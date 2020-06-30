@@ -3,13 +3,14 @@
     <div class="modal-backdrop"
     v-if="isOpen"
     :class="{open: isOpen}"
-    @click.self="closeAddBookWindow"
+    @click.self="closeModalWindow"
     >
       <form >
         <h3>Add a new book:</h3>
-        <input type="text" placeholder="Title" required v-model="title"/> <br>
-        <input type="text" placeholder="Author" required v-model="author"/> <br>
-        <input type="number" placeholder="Number of pages" required v-model="pages"/> <br>
+        <p class="text-danger" v-if="errorsPresent()">Please complete all fields</p>
+        <input type="text" placeholder="Title" v-model="title"/> <br>
+        <input type="text" placeholder="Author" v-model="author"/> <br>
+        <input type="number" placeholder="Number of pages" v-model="pages"/> <br>
         <div id="read-status">
           <p id="read-question">Have you read it?</p>
           <select id="read-selector" v-model="readStatus"> 
@@ -18,7 +19,7 @@
             <option value="Reading">Reading</option>
             </select>
         </div> <br>
-        <button class="btn btn-primary" type="submit" @click.prevent="addBook(); closeAddBookWindow();">Add Book 2</button>
+        <button class="btn btn-primary" type="submit" @click.prevent="addBook()">Add Book 2</button>
       </form>
     </div>
   </transition>
@@ -36,7 +37,7 @@ export default {
       title: '',
       author: '',
       pages: null,
-      readStatus: 'No',
+      readStatus: 'No'
     }
   },
   computed: {
@@ -45,19 +46,36 @@ export default {
     },
   },
   methods: {
-    addBook() {
-      this.$store.commit(
-        'addBook', 
-        { title: this.title, author: this.author, pages: this.pages, readStatus: this.readStatus}
-      );
-      this.$store.commit('storeLibrary');
-      this.title = '';
-      this.author = ''; 
-      this.pages = '';
-      this.readStatus = '';
+    errorsPresent() {
+      if (this.title === '' || this.author === '' || this.pages == null || this.pages == 0) {
+        return true; 
+      } else {
+        return false;
+      }
     },
-    closeAddBookWindow() {
-      eventBus.$emit('addBookWindowClosed', false)
+    addBook() {
+      //console.log(this.$store.state.library.findIndex(book => book.title == this.title) !== -1)
+      if (this.errorsPresent()) {
+        return;
+      } else if (this.$store.state.library.findIndex(book => book.title == this.title) !== -1) {
+        alert('This book already exists in your library - please enter another.');
+        return;
+      } else {
+        this.errorsPresent = false;
+        this.$store.commit(
+          'addBook', 
+          { title: this.title, author: this.author, pages: this.pages, readStatus: this.readStatus}
+        );
+        this.$store.commit('storeLibrary');
+        this.title = '';
+        this.author = ''; 
+        this.pages = '';
+        this.readStatus = 'No';
+        this.closeModalWindow()
+      }
+    },
+    closeModalWindow() {
+      eventBus.$emit('modalWindowOpen', false)
     }
   }
 }

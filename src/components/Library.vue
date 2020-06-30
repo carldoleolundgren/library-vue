@@ -3,11 +3,12 @@
     <table class="table table-striped table-hover table-responsive">
       <thead>
         <tr>
-          <th class="col-3">Title</th>
-          <th class="col-3">Author</th>
-          <th class="col-2">Pages</th>
-          <th class="col-2">Read?</th>
-          <th class="col-2"> </th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Pages</th>
+          <th>Read?</th>
+          <th> </th>
+          <th> </th>
         </tr>
       </thead>
       <tbody>
@@ -17,24 +18,28 @@
           <td class="small-column"> {{ book.pages }} </td>
           <td class="small-column"> {{ book.readStatus }} </td>
           <td class="small-column"> 
-            <button class="btn btn-danger" @click="deleteBook">Delete</button> 
+            <button class="btn btn-danger btn-sm" @click="deleteBook">Delete</button> 
+          </td>
+          <td class="small-column"> 
+            <button class="btn btn-info btn-sm" @click="editBook">Edit</button> 
           </td>
         </tr>
       </tbody>
-    <button class="btn btn-primary" @click="addBookWindowOpen = true">Add New Book</button>
+    <br>
+    <button class="btn btn-primary" @click="modalWindowOpen = true">Add New Book</button>
     </table>
-    <appAddBook :isOpen="addBookWindowOpen"></appAddBook>
+    <appAddEditBook :isOpen="modalWindowOpen"></appAddEditBook>
   </div>
 </template>
 
 <script>
-import AddBook from './AddBook'
+import AddEditBook from './AddEditBook'
 import { eventBus } from '../main'
 
 export default {
   data() {
     return {
-      addBookWindowOpen: false
+      modalWindowOpen: false
     }
   },
   computed: {
@@ -48,14 +53,17 @@ export default {
       let index = this.$store.state.library.findIndex(book => book.title == targetTitle);
       
       this.$store.state.library.splice(index, 1);
+    },
+    editBook() {
+      console.log('edit')
     }
   },
   components: {
-    appAddBook: AddBook
+    appAddEditBook: AddEditBook
   },
   created() {
-    eventBus.$on('addBookWindowClosed', (closed) => {
-      this.addBookWindowOpen = closed;
+    eventBus.$on('modalWindowOpen', (closed) => {
+      this.modalWindowOpen = closed;
     })
   }
 }
