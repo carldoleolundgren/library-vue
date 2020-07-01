@@ -8,7 +8,7 @@
       <form >
         <slot name="modalHeader"></slot>
         <p class="text-danger" v-if="errorsPresent">Please complete all fields</p>
-        <br> <p> {{ id }} </p>
+        <br> <p> ID: {{ id }} | Editing?: {{ isEditingBook }} | Key: {{ editKey}} | Index: {{ this.editIndex }}</p>
         <input type="text" placeholder="Title" v-model="title"/> <br>
         <input type="text" placeholder="Author" v-model="author"/> <br>
         <input type="number" placeholder="Number of pages" v-model="pages"/> <br>
@@ -33,7 +33,8 @@ import { eventBus } from '../main'
 export default {
   props: {
     isOpen: Boolean,
-    isEditingBook: Boolean
+    isEditingBook: Boolean,
+    editKey: null
   },
   data() {
     return {
@@ -41,7 +42,6 @@ export default {
       author: '',
       pages: null,
       readStatus: 'No',
-      editIndex: null
     }
   },
   computed: {
@@ -51,15 +51,16 @@ export default {
     id() {
       return this.title.toLowerCase() + this.author.toLowerCase() + this.pages
     },
-    editBookDetails() {
+    editIndex() {
+      let editIndex = this.$store.state.library.findIndex(book => book.id == this.editKey);
+      
       if (this.isEditingBook) {
-        this.editIndex = this.$store.state.library.findIndex(book => book.id == this.id);
-        
-        this.title = this.$store.state.library[this.editIndex].title;
-        this.author = this.$store.state.library[this.editIndex].author;
-        this.pages = this.$store.state.library[this.editIndex].pages;
-        this.readStatus = this.$store.state.library[this.editIndex].readStatus;
+        this.title = this.$store.state.library[editIndex].title;
+        this.author = this.$store.state.library[editIndex].author;
+        this.pages = this.$store.state.library[editIndex].pages;
+        this.readStatus = this.$store.state.library[editIndex].readStatus;
       }
+      return editIndex;
     },
     errorsPresent() {
       if (this.title === '' || this.author === '' || this.pages == null || this.pages == 0) {
@@ -103,8 +104,6 @@ export default {
         alert('This book already exists in your library - please enter another.');
         return;
       } else {
-        //console.log(this.$store.state.library[this.editIndex].title);
-
         this.$store.state.library[this.editIndex].title = this.title;
         this.$store.state.library[this.editIndex].author = this.author;
         this.$store.state.library[this.editIndex].pages = this.pages;

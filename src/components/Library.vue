@@ -28,7 +28,7 @@
     <br>
     <button class="btn btn-primary" @click="modalWindowOpen = true">Add New Book</button>
     </table>
-    <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editWindowOpen">
+    <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editWindowOpen" :editKey="editKey">
       <h3 slot="modalHeader">{{ modalHeaderText }}</h3>
     </appAddEditBook>
   </div>
@@ -42,7 +42,8 @@ export default {
   data() {
     return {
       modalWindowOpen: false,
-      editWindowOpen: false
+      editWindowOpen: false,
+      editKey: null
     }
   },
   computed: {
@@ -67,6 +68,7 @@ export default {
       //console.log('edit')
       this.modalWindowOpen = true;
       this.editWindowOpen = true;
+      this.editKey = event.target.id;
     }
   },
   components: {
