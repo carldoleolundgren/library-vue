@@ -108,6 +108,7 @@ export default {
         this.$store.state.library[this.editIndex].author = this.author;
         this.$store.state.library[this.editIndex].pages = this.pages;
         this.$store.state.library[this.editIndex].readStatus = this.readStatus;
+        this.$store.state.library[this.editIndex].id = this.id;
 
         this.$store.commit('storeLibrary');
         this.closeModalWindow();
