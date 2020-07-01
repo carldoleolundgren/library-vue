@@ -12,23 +12,25 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="book in library" :key="book.title">
+        <tr v-for="book in library" :key="book.title + book.author + book.pages">
           <td> {{ book.title }} </td>
           <td> {{ book.author }} </td>
           <td class="small-column"> {{ book.pages }} </td>
           <td class="small-column"> {{ book.readStatus }} </td>
           <td class="small-column"> 
-            <button class="btn btn-danger btn-sm" @click="deleteBook">Delete</button> 
+            <button class="btn btn-danger btn-sm" :id="book.id" @click="deleteBook">Delete</button> 
           </td>
           <td class="small-column"> 
-            <button class="btn btn-info btn-sm" @click="editBook">Edit</button> 
+            <button class="btn btn-info btn-sm" @click="editBook" :id="book.id">Edit</button> 
           </td>
         </tr>
       </tbody>
     <br>
     <button class="btn btn-primary" @click="modalWindowOpen = true">Add New Book</button>
     </table>
-    <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editingBook"></appAddEditBook>
+    <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editWindowOpen">
+      <h3 slot="modalHeader">{{ modalHeaderText }}</h3>
+    </appAddEditBook>
   </div>
 </template>
 
@@ -40,25 +42,31 @@ export default {
   data() {
     return {
       modalWindowOpen: false,
-      editingBook: false
+      editWindowOpen: false
     }
   },
   computed: {
     library() {
       return this.$store.state.library;
+    },
+    modalHeaderText() {
+      if (this.editWindowOpen) { 
+        return 'Edit book:'
+      } else {
+        return 'Add a book:'
+      }
     }
   },
   methods: {
     deleteBook() {
-      let targetTitle = event.target.parentNode.parentNode.firstChild.innerText;
-      let index = this.$store.state.library.findIndex(book => book.title == targetTitle);
+      let index = this.$store.state.library.findIndex(book => book.id == event.target.id);
       this.$store.state.library.splice(index, 1);
       this.$store.commit('storeLibrary');
     },
     editBook() {
       //console.log('edit')
       this.modalWindowOpen = true;
-      this.editingBook = true;
+      this.editWindowOpen = true;
     }
   },
   components: {
@@ -67,7 +75,7 @@ export default {
   created() {
     eventBus.$on('modalWindowOpen', (closed) => {
       this.modalWindowOpen = closed;
-      this.editingBook = closed;
+      this.editWindowOpen = closed;
     })
   }
 }

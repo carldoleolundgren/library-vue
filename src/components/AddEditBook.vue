@@ -6,8 +6,9 @@
     @click.self="closeModalWindow"
     >
       <form >
-        <h3>Add a new book:</h3>
-        <p class="text-danger" v-if="errorsPresent()">Please complete all fields</p>
+        <slot name="modalHeader"></slot>
+        <p class="text-danger" v-if="errorsPresent">Please complete all fields</p>
+        <br> <p> {{ id }} </p>
         <input type="text" placeholder="Title" v-model="title"/> <br>
         <input type="text" placeholder="Author" v-model="author"/> <br>
         <input type="number" placeholder="Number of pages" v-model="pages"/> <br>
@@ -19,7 +20,8 @@
             <option value="Reading">Reading</option>
             </select>
         </div> <br>
-        <button class="btn btn-primary" type="submit" @click.prevent="addBook()">Add Book</button>
+        <button class="btn btn-success" type="submit" v-if="isEditingBook" @click.prevent="saveChanges()">Save Changes</button>
+        <button class="btn btn-primary" type="submit" v-else @click.prevent="addBook()">Add Book</button>
       </form>
     </div>
   </transition>
@@ -38,24 +40,27 @@ export default {
       title: '',
       author: '',
       pages: null,
-      readStatus: 'No'
-
+      readStatus: 'No',
+      editIndex: null
     }
   },
   computed: {
     library() {
       return this.$store.state.library
     },
+    id() {
+      return this.title.toLowerCase() + this.author.toLowerCase() + this.pages
+    },
     editBookDetails() {
       if (this.isEditingBook) {
-        let targetTitle = event.target.parentNode.parentNode.firstChild.innerText;
-        console.log(targetTitle);
-        let index = this.$store.state.library.findIndex(book => book.title == targetTitle);
-        console.log(targetTitle);
+        this.editIndex = this.$store.state.library.findIndex(book => book.id == this.id);
+        
+        this.title = this.$store.state.library[this.editIndex].title;
+        this.author = this.$store.state.library[this.editIndex].author;
+        this.pages = this.$store.state.library[this.editIndex].pages;
+        this.readStatus = this.$store.state.library[this.editIndex].readStatus;
       }
-    }
-  },
-  methods: {
+    },
     errorsPresent() {
       if (this.title === '' || this.author === '' || this.pages == null || this.pages == 0) {
         return true; 
@@ -63,27 +68,57 @@ export default {
         return false;
       }
     },
+  },
+  methods: {
     addBook() {
-      if (this.errorsPresent()) {
+      if (this.errorsPresent) {
         return;
-      } else if (this.$store.state.library.findIndex(book => book.title == this.title) !== -1) {
+      } else if (this.$store.state.library.findIndex(book => book.id == this.id) !== -1) {
         alert('This book already exists in your library - please enter another.');
         return;
       } else {
-        this.errorsPresent = false;
         this.$store.commit(
           'addBook', 
-          { title: this.title, author: this.author, pages: this.pages, readStatus: this.readStatus}
+          { 
+            title: this.title, 
+            author: this.author, 
+            pages: this.pages, 
+            readStatus: this.readStatus,
+            id: this.id
+          }
         );
         this.$store.commit('storeLibrary');
+        console.log(this.$store.state.library)
         this.title = '';
         this.author = ''; 
         this.pages = '';
         this.readStatus = 'No';
-        this.closeModalWindow()
+        this.closeModalWindow();
       }
     },
+    saveChanges() {
+      if (this.errorsPresent) {
+        return;
+      } else if (this.$store.state.library.findIndex(book => book.id == this.id) !== -1) {
+        alert('This book already exists in your library - please enter another.');
+        return;
+      } else {
+        //console.log(this.$store.state.library[this.editIndex].title);
+
+        this.$store.state.library[this.editIndex].title = this.title;
+        this.$store.state.library[this.editIndex].author = this.author;
+        this.$store.state.library[this.editIndex].pages = this.pages;
+        this.$store.state.library[this.editIndex].readStatus = this.readStatus;
+
+        this.$store.commit('storeLibrary');
+        this.closeModalWindow();
+      }
+    },    
     closeModalWindow() {
+      this.title = '';
+      this.author = ''; 
+      this.pages = '';
+      this.readStatus = 'No';
       eventBus.$emit('modalWindowOpen', false)
     }
   }
