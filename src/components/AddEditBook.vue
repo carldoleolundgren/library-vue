@@ -19,7 +19,7 @@
             <option value="Reading">Reading</option>
             </select>
         </div> <br>
-        <button class="btn btn-primary" type="submit" @click.prevent="addBook()">Add Book 2</button>
+        <button class="btn btn-primary" type="submit" @click.prevent="addBook()">Add Book</button>
       </form>
     </div>
   </transition>
@@ -31,6 +31,7 @@ import { eventBus } from '../main'
 export default {
   props: {
     isOpen: Boolean,
+    isEditingBook: Boolean
   },
   data() {
     return {
@@ -38,12 +39,21 @@ export default {
       author: '',
       pages: null,
       readStatus: 'No'
+
     }
   },
   computed: {
     library() {
       return this.$store.state.library
     },
+    editBookDetails() {
+      if (this.isEditingBook) {
+        let targetTitle = event.target.parentNode.parentNode.firstChild.innerText;
+        console.log(targetTitle);
+        let index = this.$store.state.library.findIndex(book => book.title == targetTitle);
+        console.log(targetTitle);
+      }
+    }
   },
   methods: {
     errorsPresent() {
@@ -54,7 +64,6 @@ export default {
       }
     },
     addBook() {
-      //console.log(this.$store.state.library.findIndex(book => book.title == this.title) !== -1)
       if (this.errorsPresent()) {
         return;
       } else if (this.$store.state.library.findIndex(book => book.title == this.title) !== -1) {

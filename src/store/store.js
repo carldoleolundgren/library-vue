@@ -23,7 +23,7 @@ export const store = new Vuex.Store({
     storeLibrary() {
       let librarySerialized = JSON.stringify(this.state.library);
       localStorage.setItem('storedLibrary', librarySerialized);
-      console.log(librarySerialized)
+      //console.log(librarySerialized)
     },
     loadLibrary() {
       if (JSON.parse(localStorage.getItem('storedLibrary'))) {

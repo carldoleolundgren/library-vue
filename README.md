@@ -1,4 +1,4 @@
-# restaurant-page-vue
+# library-vue
 
 > A simple library page demonstrating most of VueJs' functionality
 

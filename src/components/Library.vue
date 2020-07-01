@@ -28,7 +28,7 @@
     <br>
     <button class="btn btn-primary" @click="modalWindowOpen = true">Add New Book</button>
     </table>
-    <appAddEditBook :isOpen="modalWindowOpen"></appAddEditBook>
+    <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editingBook"></appAddEditBook>
   </div>
 </template>
 
@@ -39,7 +39,8 @@ import { eventBus } from '../main'
 export default {
   data() {
     return {
-      modalWindowOpen: false
+      modalWindowOpen: false,
+      editingBook: false
     }
   },
   computed: {
@@ -51,11 +52,13 @@ export default {
     deleteBook() {
       let targetTitle = event.target.parentNode.parentNode.firstChild.innerText;
       let index = this.$store.state.library.findIndex(book => book.title == targetTitle);
-      
       this.$store.state.library.splice(index, 1);
+      this.$store.commit('storeLibrary');
     },
     editBook() {
-      console.log('edit')
+      //console.log('edit')
+      this.modalWindowOpen = true;
+      this.editingBook = true;
     }
   },
   components: {
@@ -64,6 +67,7 @@ export default {
   created() {
     eventBus.$on('modalWindowOpen', (closed) => {
       this.modalWindowOpen = closed;
+      this.editingBook = closed;
     })
   }
 }
