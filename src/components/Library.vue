@@ -1,5 +1,6 @@
 <template>
   <div>
+    <input type="text" class="form-control" placeholder="Search by title or author" v-model="filterText">
     <table class="table table-striped table-hover table-responsive">
       <thead>
         <tr>
@@ -12,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="book in library" :key="book.title + book.author + book.pages">
+        <tr v-for="book in filteredTitles" :key="book.title + book.author + book.pages">
           <td> {{ book.title }} </td>
           <td> {{ book.author }} </td>
           <td class="small-column"> {{ book.pages }} </td>
@@ -43,12 +44,19 @@ export default {
     return {
       modalWindowOpen: false,
       editWindowOpen: false,
-      editKey: null
+      editKey: null,
+      filterText: ''
     }
   },
   computed: {
     library() {
       return this.$store.state.library;
+    },
+    filteredTitles() {
+      return this.library.filter((el) => {
+        return el.title.toLowerCase().match(this.filterText) ||
+              el.author.toLowerCase().match(this.filterText)
+      })
     },
     modalHeaderText() {
       if (this.editWindowOpen) { 
@@ -84,6 +92,13 @@ export default {
 </script>
 
 <style scoped>
+input {
+  width: 90%;
+  border-radius: 25px;
+  margin: auto;
+  margin-bottom: 2%;
+}
+
 table {
   width: 90%;
   margin: auto;
