@@ -8,7 +8,6 @@
       <form >
         <slot name="modalHeader"></slot>
         <p class="text-danger" v-if="errorsPresent">Please complete all fields</p>
-        <br> <p> ID: {{ id }} | Editing?: {{ isEditingBook }} | Key: {{ editKey}} | Index: {{ this.editIndex }}</p>
         <input type="text" placeholder="Title" v-model="title"/> <br>
         <input type="text" placeholder="Author" v-model="author"/> <br>
         <input type="number" placeholder="Number of pages" v-model="pages"/> <br>

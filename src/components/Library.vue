@@ -2,32 +2,50 @@
   <div>
     <input type="text" class="form-control" placeholder="Search by title or author" v-model="filterText">
     <table class="table table-striped table-hover table-responsive">
-      <thead>
+      <thead class="">
         <tr>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Pages</th>
-          <th>Read?</th>
-          <th> </th>
-          <th> </th>
+          <th class="col-md-3">
+            Title 
+            <font-awesome-icon icon="arrow-up" />
+          </th>
+          <th class="col-md-2">
+            Author
+            <font-awesome-icon icon="arrow-up" />
+          </th>
+          <th class="col-md-2">
+            Pages
+            <font-awesome-icon icon="arrow-up" />
+          </th>
+          <th class="col-md-2">
+            Read?
+            <font-awesome-icon icon="arrow-up" />
+          </th>
+          <th class="col-md-1"> </th>
+          <th class="col-md-1"> </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="book in filteredTitles" :key="book.title + book.author + book.pages">
+        <tr v-for="book in filteredLibrary" :key="book.title + book.author + book.pages">
           <td> {{ book.title }} </td>
           <td> {{ book.author }} </td>
-          <td class="small-column"> {{ book.pages }} </td>
-          <td class="small-column"> {{ book.readStatus }} </td>
-          <td class="small-column"> 
-            <button class="btn btn-danger btn-sm" :id="book.id" @click="deleteBook">Delete</button> 
+          <td class=""> {{ book.pages }} </td>
+          <td class=""> {{ book.readStatus }} </td>
+          <td class=""> 
+            <button class="btn btn-danger btn-sm" :id="book.id" @click="deleteBook">
+              <font-awesome-icon icon="trash" />  
+            </button> 
           </td>
-          <td class="small-column"> 
-            <button class="btn btn-info btn-sm" @click="editBook" :id="book.id">Edit</button> 
+          <td class=""> 
+            <button class="btn btn-info btn-sm" @click="editBook" :id="book.id">
+              <font-awesome-icon icon="edit" />    
+            </button> 
           </td>
         </tr>
       </tbody>
     <br>
-    <button class="btn btn-primary" @click="modalWindowOpen = true">Add New Book</button>
+    <button class="btn btn-primary" @click="modalWindowOpen = true">
+      <font-awesome-icon icon="plus-square" />    
+      New Book</button>
     </table>
     <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editWindowOpen" :editKey="editKey">
       <h3 slot="modalHeader">{{ modalHeaderText }}</h3>
@@ -52,11 +70,14 @@ export default {
     library() {
       return this.$store.state.library;
     },
-    filteredTitles() {
+    filteredLibrary() {
       return this.library.filter((el) => {
-        return el.title.toLowerCase().match(this.filterText) ||
-              el.author.toLowerCase().match(this.filterText)
+        return el.title.toLowerCase().match(this.filterTextLowercase) ||
+              el.author.toLowerCase().match(this.filterTextLowercase)
       })
+    },
+    filterTextLowercase() {
+      return this.filterText.toLowerCase();
     },
     modalHeaderText() {
       if (this.editWindowOpen) { 
@@ -106,11 +127,7 @@ table {
 
 th {
   border-bottom: 1px solid black;
-}
-
-.small-column {
-  width: 10%;
-  text-align: center;
+  white-space: nowrap
 }
 
 .wide-column {
