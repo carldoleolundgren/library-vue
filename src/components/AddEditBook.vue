@@ -8,6 +8,7 @@
       <form >
         <slot name="modalHeader"></slot>
         <p class="text-danger" v-if="errorsPresent">Please complete all fields</p>
+        <!-- <br> <p>Editing Book: {{isEditingBook}} | Edit Key: {{ editKey }} | Edit Index: {{ editIndex }}</p> -->
         <input type="text" placeholder="Title" v-model="title"/> <br>
         <input type="text" placeholder="Author" v-model="author"/> <br>
         <input type="number" placeholder="Number of pages" v-model="pages"/> <br>
@@ -52,7 +53,7 @@ export default {
     },
     editIndex() {
       let editIndex = this.$store.state.library.findIndex(book => book.id == this.editKey);
-      
+       
       if (this.isEditingBook) {
         this.title = this.$store.state.library[editIndex].title;
         this.author = this.$store.state.library[editIndex].author;

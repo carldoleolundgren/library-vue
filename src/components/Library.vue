@@ -32,12 +32,12 @@
           <td class=""> {{ book.readStatus }} </td>
           <td class=""> 
             <button class="btn btn-danger btn-sm" :id="book.id" @click="deleteBook">
-              <font-awesome-icon icon="trash" />  
+              <font-awesome-icon icon="trash" :id="book.id"/>  
             </button> 
           </td>
           <td class=""> 
             <button class="btn btn-info btn-sm" @click="editBook" :id="book.id">
-              <font-awesome-icon icon="edit" />    
+              <font-awesome-icon icon="edit" :id="book.id"/>    
             </button> 
           </td>
         </tr>
@@ -85,7 +85,7 @@ export default {
       } else {
         return 'Add a book:'
       }
-    }
+    },
   },
   methods: {
     deleteBook() {
@@ -94,10 +94,10 @@ export default {
       this.$store.commit('storeLibrary');
     },
     editBook() {
-      //console.log('edit')
+      //console.log(event.target.parentNode.parentNode.childNodes[4].innerText.toLowerCase())
       this.modalWindowOpen = true;
       this.editWindowOpen = true;
-      this.editKey = event.target.id;
+      this.editKey = event.target.id
     }
   },
   components: {
@@ -107,6 +107,7 @@ export default {
     eventBus.$on('modalWindowOpen', (closed) => {
       this.modalWindowOpen = closed;
       this.editWindowOpen = closed;
+      this.editKey = closed;
     })
   }
 }

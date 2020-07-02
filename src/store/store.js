@@ -9,11 +9,13 @@ export const store = new Vuex.Store({
       {title: 'Three Body Problem',
       author: 'Cixin Liu',
       pages: 303,
-      readStatus: 'Yes'},
+      readStatus: 'Yes',
+      id: 'three body problemcixin liu303'},
       {title: 'Death\'s End',
       author: 'Cixin Liu',
       pages: 433,
-      readStatus: 'Yes'},
+      readStatus: 'Yes',
+      id: 'death\'s endcixin liu433'},
     ]
   },
   mutations: {
