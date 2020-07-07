@@ -4,21 +4,37 @@
     <table class="table table-striped table-hover table-responsive">
       <thead class="">
         <tr>
-          <th class="col-md-3">
+          <th class="col-md-3" @click="sortLibrary('title')">
             Title 
-            <font-awesome-icon icon="arrow-up" />
+            <font-awesome-icon 
+              icon="arrow-up"
+              v-show="currentSort === 'title'"
+              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"
+            />
           </th>
-          <th class="col-md-2">
+          <th class="col-md-2" @click="sortLibrary('author')">
             Author
-            <font-awesome-icon icon="arrow-up" />
+            <font-awesome-icon 
+              icon="arrow-up" 
+              v-show="currentSort === 'author'"
+              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
+            />
           </th>
-          <th class="col-md-2">
+          <th class="col-md-2" @click="sortLibrary('pages')">
             Pages
-            <font-awesome-icon icon="arrow-up" />
+            <font-awesome-icon 
+              icon="arrow-up" 
+              v-show="currentSort === 'pages'"
+              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
+            />
           </th>
-          <th class="col-md-2">
+          <th class="col-md-2" @click="sortLibrary('readStatus')">
             Read?
-            <font-awesome-icon icon="arrow-up" />
+            <font-awesome-icon 
+              icon="arrow-up" 
+              v-show="currentSort === 'readStatus'"
+              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
+            />
           </th>
           <th class="col-md-1"> </th>
           <th class="col-md-1"> </th>
@@ -63,15 +79,26 @@ export default {
       modalWindowOpen: false,
       editWindowOpen: false,
       editKey: null,
-      filterText: ''
+      filterText: '',
+      currentSort:'name',
+      currentSortDir:'asc'
     }
   },
   computed: {
     library() {
       return this.$store.state.library;
     },
+    sortedLibrary() {
+      return this.library.sort((a,b) => {
+        let modifier = 1;
+        if(this.currentSortDir === 'desc') modifier = -1;
+        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+        return 0;
+      });
+    },
     filteredLibrary() {
-      return this.library.filter((el) => {
+      return this.sortedLibrary.filter((el) => {
         return el.title.toLowerCase().match(this.filterTextLowercase) ||
               el.author.toLowerCase().match(this.filterTextLowercase)
       })
@@ -94,20 +121,28 @@ export default {
       this.$store.commit('storeLibrary');
     },
     editBook() {
-      //console.log(event.target.parentNode.parentNode.childNodes[4].innerText.toLowerCase())
       this.modalWindowOpen = true;
       this.editWindowOpen = true;
       this.editKey = event.target.id
+    },
+    sortLibrary(s) {
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+      }
+      this.currentSort = s;
     }
   },
   components: {
-    appAddEditBook: AddEditBook
+    appAddEditBook: AddEditBook,
   },
   created() {
     eventBus.$on('modalWindowOpen', (closed) => {
       this.modalWindowOpen = closed;
       this.editWindowOpen = closed;
       this.editKey = closed;
+    })
+    eventBus.$on('arrowSwitched', (newSort) => {
+      this.sortAtoZ = newSort;
     })
   }
 }
