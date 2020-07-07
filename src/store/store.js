@@ -16,6 +16,11 @@ export const store = new Vuex.Store({
       pages: 433,
       readStatus: 'Yes',
       id: 'death\'s endcixin liu433'},
+      {title: 'The Ultimate Spanish Review and Practice',
+      author: 'Ronni L. Gordon',
+      pages: 568,
+      readStatus: 'Reading',
+      id: 'the ultimate spanish review and practiceronni l. gordon568'},
     ]
   },
   mutations: {

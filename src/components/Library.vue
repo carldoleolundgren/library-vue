@@ -6,35 +6,43 @@
         <tr>
           <th class="col-md-3" @click="sortLibrary('title')">
             Title 
-            <font-awesome-icon 
-              icon="arrow-up"
-              v-show="currentSort === 'title'"
-              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"
-            />
+            <transition name="rotate">
+              <font-awesome-icon 
+                icon="arrow-up"
+                v-show="currentSort === 'title'"
+                :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"
+              />
+            </transition>
           </th>
           <th class="col-md-2" @click="sortLibrary('author')">
             Author
-            <font-awesome-icon 
-              icon="arrow-up" 
-              v-show="currentSort === 'author'"
-              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
-            />
+            <transition name="rotate">
+              <font-awesome-icon 
+                icon="arrow-up" 
+                v-show="currentSort === 'author'"
+                :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
+              />
+            </transition>
           </th>
           <th class="col-md-2" @click="sortLibrary('pages')">
             Pages
-            <font-awesome-icon 
-              icon="arrow-up" 
-              v-show="currentSort === 'pages'"
-              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
-            />
+            <transition name="rotate">
+              <font-awesome-icon 
+                icon="arrow-up" 
+                v-show="currentSort === 'pages'"
+                :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
+              />
+            </transition>
           </th>
           <th class="col-md-2" @click="sortLibrary('readStatus')">
             Read?
-            <font-awesome-icon 
-              icon="arrow-up" 
-              v-show="currentSort === 'readStatus'"
-              :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
-            />
+            <transition name="rotate">
+              <font-awesome-icon 
+                icon="arrow-up" 
+                v-show="currentSort === 'readStatus'"
+                :style="{transform: currentSortDir === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)'}"              
+              />
+            </transition>
           </th>
           <th class="col-md-1"> </th>
           <th class="col-md-1"> </th>
@@ -44,23 +52,23 @@
         <tr v-for="book in filteredLibrary" :key="book.title + book.author + book.pages">
           <td> {{ book.title }} </td>
           <td> {{ book.author }} </td>
-          <td class=""> {{ book.pages }} </td>
-          <td class=""> {{ book.readStatus }} </td>
-          <td class=""> 
+          <td> {{ book.pages }} </td>
+          <td> {{ book.readStatus }} </td>
+          <td> 
             <button class="btn btn-danger btn-sm" :id="book.id" @click="deleteBook">
-              <font-awesome-icon icon="trash" :id="book.id"/>  
+              <font-awesome-icon icon="trash" style="pointer-events:none" :id="book.id"/>  
             </button> 
           </td>
           <td class=""> 
             <button class="btn btn-info btn-sm" @click="editBook" :id="book.id">
-              <font-awesome-icon icon="edit" :id="book.id"/>    
+              <font-awesome-icon icon="edit" style="pointer-events:none" :id="book.id"/>    
             </button> 
           </td>
         </tr>
       </tbody>
     <br>
     <button class="btn btn-primary" @click="modalWindowOpen = true">
-      <font-awesome-icon icon="plus-square" />    
+      <font-awesome-icon icon="plus-square" style="pointer-events: none"/>    
       New Book</button>
     </table>
     <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editWindowOpen" :editKey="editKey">
@@ -116,7 +124,10 @@ export default {
   },
   methods: {
     deleteBook() {
+      /* console.log(event.target.id)
+      console.log(this.$store.state.library.findIndex(book => book.id == event.target.id)) */
       let index = this.$store.state.library.findIndex(book => book.id == event.target.id);
+      //console.log(index)
       this.$store.state.library.splice(index, 1);
       this.$store.commit('storeLibrary');
     },
@@ -163,7 +174,8 @@ table {
 
 th {
   border-bottom: 1px solid black;
-  white-space: nowrap
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .wide-column {
