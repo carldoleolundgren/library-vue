@@ -2,9 +2,8 @@
   <div>
     <input type="text" class="form-control" placeholder="Search by title or author" v-model="filterText">
     <table class="table table-striped table-hover table-responsive">
-      <thead class="">
-        <tr>
-          <th class="col-md-3" @click="sortLibrary('title')">
+      <thead>
+          <th class="title" @click="sortLibrary('title')">
             Title 
             <transition name="rotate">
               <font-awesome-icon 
@@ -14,7 +13,7 @@
               />
             </transition>
           </th>
-          <th class="col-md-2" @click="sortLibrary('author')">
+          <th class="author" @click="sortLibrary('author')">
             Author
             <transition name="rotate">
               <font-awesome-icon 
@@ -24,7 +23,7 @@
               />
             </transition>
           </th>
-          <th class="col-md-2" @click="sortLibrary('pages')">
+          <th class="small-col" @click="sortLibrary('pages')">
             Pages
             <transition name="rotate">
               <font-awesome-icon 
@@ -34,7 +33,7 @@
               />
             </transition>
           </th>
-          <th class="col-md-2" @click="sortLibrary('readStatus')">
+          <th class="small-col" @click="sortLibrary('readStatus')">
             Read?
             <transition name="rotate">
               <font-awesome-icon 
@@ -44,9 +43,8 @@
               />
             </transition>
           </th>
-          <th class="col-md-1"> </th>
-          <th class="col-md-1"> </th>
-        </tr>
+          <th class="small-col"> </th>
+          <th class="small-col"> </th>
       </thead>
       <tbody>
         <tr v-for="book in filteredLibrary" :key="book.title + book.author + book.pages">
@@ -59,7 +57,7 @@
               <font-awesome-icon icon="trash" style="pointer-events:none" :id="book.id"/>  
             </button> 
           </td>
-          <td class=""> 
+          <td> 
             <button class="btn btn-info btn-sm" @click="editBook" :id="book.id">
               <font-awesome-icon icon="edit" style="pointer-events:none" :id="book.id"/>    
             </button> 
@@ -168,14 +166,23 @@ input {
 }
 
 table {
-  width: 90%;
   margin: auto;
+  width: 90%;
 }
 
 th {
-  border-bottom: 1px solid black;
   white-space: nowrap;
   cursor: pointer;
+}
+
+.title {
+  width: 40%;
+}
+.author {
+  width: 30%;
+}
+.small-col {
+  width: 10%;
 }
 
 .wide-column {
