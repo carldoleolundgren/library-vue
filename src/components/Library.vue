@@ -69,7 +69,7 @@
       <font-awesome-icon icon="plus-square" style="pointer-events: none"/>    
       New Book</button>
     </table>
-    <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editWindowOpen" :editKey="editKey">
+    <appAddEditBook :isOpen="modalWindowOpen" :isEditingBook="editWindowOpen" :editID="editID">
       <h3 slot="modalHeader">{{ modalHeaderText }}</h3>
     </appAddEditBook>
   </div>
@@ -84,7 +84,7 @@ export default {
     return {
       modalWindowOpen: false,
       editWindowOpen: false,
-      editKey: null,
+      editID: null,
       filterText: '',
       currentSort:'name',
       currentSortDir:'asc'
@@ -132,7 +132,7 @@ export default {
     editBook() {
       this.modalWindowOpen = true;
       this.editWindowOpen = true;
-      this.editKey = event.target.id
+      this.editID = event.target.id
     },
     sortLibrary(s) {
       if (s === this.currentSort) {
@@ -148,7 +148,7 @@ export default {
     eventBus.$on('modalWindowOpen', (closed) => {
       this.modalWindowOpen = closed;
       this.editWindowOpen = closed;
-      this.editKey = closed;
+      this.editID = closed;
     })
   }
 }
