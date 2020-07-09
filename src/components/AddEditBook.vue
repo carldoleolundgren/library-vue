@@ -99,10 +99,13 @@ export default {
       }
     },
     saveChanges() {
+      let bookIndex = this.$store.state.library.findIndex(book => book.id == this.id);
+      let bookExists = bookIndex === -1 ? false : true;
+      let readStatusIsUnchanged = (this.$store.state.library[bookIndex].readStatus === this.readStatus)
       if (this.errorsPresent) {
         return;
-      } else if (this.$store.state.library.findIndex(book => book.id == this.id) !== -1) {
-        alert('This book already exists in your library - please enter another.');
+      } else if (bookExists && readStatusIsUnchanged) {
+        alert('This book already exists in your library or you haven\'t changed any data.');
         return;
       } else {
         this.$store.state.library[this.editIndex].title = this.title;
